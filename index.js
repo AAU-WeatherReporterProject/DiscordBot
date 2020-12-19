@@ -2,6 +2,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const config =  require('./config/config.json');
+const imageService = require('./services/image-service')();
 const apiService = require('./services/api-service')(process.env.ENDPOINT);
 
 client.on('ready', () => {
@@ -10,7 +11,6 @@ client.on('ready', () => {
 
 client.on('message', message => {
     const messageContent = message.content.toLocaleLowerCase().trim();
-
     if(messageContent.startsWith(config.prefix))
     {
         const content = message.content.substring(config.prefix.length).trim();
@@ -20,9 +20,12 @@ client.on('message', message => {
             message.reply('data sent');
         }
         else if(content.startsWith('show')){
-            //fetch data
-            //generate image
-            //upload/reply image
+            (async () => {
+                //TO-DO: fetch data
+                const imageBuffer = await imageService.generateChart();
+                const attachment = new Discord.MessageAttachment(imageBuffer, 'chart.png');
+                message.channel.send(`Displaying chart:`, attachment);
+            })();
         }
     }
 })
