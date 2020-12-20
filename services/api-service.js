@@ -1,7 +1,15 @@
 const AXIOS = require('axios');
-const axios = AXIOS.create({
-  baseURL: `${process.env.ENDPOINT}/api/v1`
+const { withVersioning, VersioningStrategy } = require('axios-api-versioning');
+
+const baseClient = AXIOS.create({
+    baseURL: `${process.env.ENDPOINT}/api/v{apiVersion}`
 });
+
+const axios = withVersioning(baseClient, {
+    apiVersion: '1',
+    versioningStrategy: VersioningStrategy.UrlPath
+});
+
 const options = {
     headers:{
         'Content-Type': 'application/json'
