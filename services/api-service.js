@@ -3,7 +3,7 @@ const options = {
     headers:{
         'Content-Type': 'application/json'
     }
-}
+};
 
 module.exports = (endpoint) =>{
     const service = {
