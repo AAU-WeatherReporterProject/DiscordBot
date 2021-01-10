@@ -1,9 +1,8 @@
-'use strict'
-const Discord = require('discord.js');
-const client = new Discord.Client();
-const config =  require('./config/config.json');
-const dataService = require('./services/data-service')();
-const imageService = require('./services/image-service')();
+import { Client, MessageAttachment } from 'discord.js';
+import prefix from './config/config.mjs';
+import dataService from './services/data-service.mjs';
+import imageService from './services/image-service.mjs';
+
 const COMMANDS = {
     SENDWEATHERDATA: 'send',
     GETMEASUREMENTS: 'measurements',
@@ -11,17 +10,19 @@ const COMMANDS = {
     SHOWDATA: 'show'
 }
 
+const client = new Client();
+
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on('message', async message => {
+client.on('message', async(message) => {
     const messageContent = message.content.toLocaleLowerCase().trim();
     //TO-DO: Waiting for new API. No parsing necessary in future
     
-    if(messageContent.startsWith(config.prefix))
+    if(messageContent.startsWith(prefix))
     {
-        const content = message.content.substring(config.prefix.length).trim();
+        const content = message.content.substring(prefix.length).trim();
         if(content.startsWith(COMMANDS.SENDWEATHERDATA)){
             const messageText = await dataService.sendWeatherData(content.substring(COMMANDS.SENDWEATHERDATA.length).trim().split(' '));
             message.reply(messageText);
@@ -38,7 +39,7 @@ client.on('message', async message => {
             //TO-DO: fetch data
             // dataService.getWeatherData();
             const imageBuffer = await imageService.generateChart();
-            const attachment = new Discord.MessageAttachment(imageBuffer, 'chart.png');
+            const attachment = new MessageAttachment(imageBuffer, 'chart.png');
             message.channel.send(`Displaying chart:`, attachment);
         }
     }

@@ -1,15 +1,8 @@
-const { CanvasRenderService } = require('chartjs-node-canvas');
+import { CanvasRenderService } from 'chartjs-node-canvas';
  
 
-module.exports = () => {
-    const service = {
-        generateChart: generateChart
-    };
-
-    return service;
-
-
-    async function generateChart(data){
+export default {
+    async generateChart(data){
         const width = 400; //px
         const height = 400; //px
         const canvasRenderService = new CanvasRenderService(width, height, (ChartJS) => { });
@@ -24,9 +17,9 @@ module.exports = () => {
         };
         const image = await canvasRenderService.renderToBuffer(configuration);
         return image;
-    }
+    },
 
-    function generateTestData(){
+    generateTestData(){
         return {
             labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
             datasets: [{

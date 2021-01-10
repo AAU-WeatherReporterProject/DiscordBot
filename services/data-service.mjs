@@ -1,14 +1,7 @@
-const apiService = require("./api-service")();
+import apiService from './api-service.mjs';
 
-module.exports = () =>{
-    const service = {
-        sendWeatherData:sendWeatherData,
-        getMeasurements: getMeasurements,
-        addMeasurementPoint: addMeasurementPoint
-    };
-    return service;
-
-    async function sendWeatherData([key, temperature, skyState]){
+export default {
+    async sendWeatherData([key, temperature, skyState]){
         let messageText;
         temperature = +temperature;//.replace(',', '.');
         skyState = +skyState;
@@ -32,9 +25,9 @@ module.exports = () =>{
             }
         }
         return messageText;
-    }
+    },
 
-    async function getMeasurements(){
+    async getMeasurements(){
         let message = '';
         try{
             const response = await apiService.getMeasurements();
@@ -47,9 +40,9 @@ module.exports = () =>{
             console.error(e);
         }
         return message;
-    }
-
-    async function addMeasurementPoint([name, location]){
+    },
+    
+    async addMeasurementPoint([name, location]){
         let message;
         try{
             await apiService.addMeasurementPoint({name, location});
