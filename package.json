@@ -5,6 +5,7 @@
   "main": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
+    "test:mocha": "mocha --require @babel/register",
     "build": "echo \"no build step configured\""
   },
   "repository": {
@@ -18,10 +19,23 @@
   },
   "homepage": "https://github.com/AAU-WeatherReporterProject/DiscordBot#readme",
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "axios-api-versioning": "^3.0.0",
     "chart.js": "^2.9.4",
     "chartjs-node-canvas": "^3.0.6",
     "discord.js": "^12.5.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/register": "^7.12.10",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1",
+    "regenerator-runtime": "^0.13.7"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
   }
 }

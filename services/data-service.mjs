@@ -2,14 +2,14 @@ import apiService from './api-service.mjs';
 
 export default {
     async sendWeatherData([key, temperature, skyState]){
-        let messageText;
+        let message = '';
         temperature = +temperature;//.replace(',', '.');
         skyState = +skyState;
         if(isNaN(temperature)){
-            message = 'invalid temperature';
+            message = 'Invalid temperature';
         }
         else if(isNaN(skyState) || skyState < 0 || skyState > 4){
-            message = 'invalid sky state';
+            message = 'Invalid sky state';
         }
         else{
             try{
@@ -17,14 +17,14 @@ export default {
                     metadata: {key},
                     measurements: [{temperature, skyState}]
                 });
-                messageText = 'Data send';
+                message = 'Data send';
             }
             catch(e){
-                messageText = 'Error while sending data';
+                message = 'Error while sending data';
                 console.error(e);
             }
         }
-        return messageText;
+        return message;
     },
 
     async getMeasurements(){
