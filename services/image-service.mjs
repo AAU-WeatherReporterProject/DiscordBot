@@ -3,8 +3,8 @@ import { CanvasRenderService } from 'chartjs-node-canvas';
 
 export default {
     async generateChart(data, key){
-        const width = 400; //px
-        const height = 400; //px
+        const width = 1920; //px
+        const height = 1080; //px
         const canvasRenderService = new CanvasRenderService(width, height, (ChartJS) => { });
         
         // See https://www.chartjs.org/docs/latest/configuration
@@ -21,7 +21,12 @@ export default {
                         {
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Temperature'
+                                labelString: 'Temperature (in C°)',
+                                fontSize: 30,
+                                fontWeight: 'bold'
+                            },
+                            ticks: {
+                                fontSize: 30
                             }
                         }
                     ],
@@ -29,7 +34,12 @@ export default {
                         {
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Timestamp'
+                                labelString: 'Timestamp',
+                                fontSize: 30,
+                                fontWeight: 'bold'
+                            },
+                            ticks: {
+                                fontSize: 20
                             }
                         }
                     ],
