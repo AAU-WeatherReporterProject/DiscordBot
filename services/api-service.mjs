@@ -28,5 +28,9 @@ export default {
 
     addMeasurementPoint(data){
         return axios.post(`/measurementPoint`, data, options);
+    },
+
+    getWeatherData(key, from, to){
+        return axios.get(`/dataPoints`, {params: {key, from, to}});
     }
 }

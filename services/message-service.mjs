@@ -12,22 +12,29 @@ export default {
         if(message.startsWith(Settings.prefix))
         {
             const content = message.substring(Settings.prefix.length).trim();
-            if(content.startsWith(COMMANDS.SENDWEATHERDATA)){
-                result.message = await dataService.sendWeatherData(content.substring(COMMANDS.SENDWEATHERDATA.length).trim().split(' '));
-                console.log('result',result)
+            if(content.startsWith(COMMANDS.SENDWEATHERDATA.value)){
+                result.message = await dataService.sendWeatherData(getCommands(content, COMMANDS.SENDWEATHERDATA.value));
             }
-            else if(content.startsWith(COMMANDS.GETMEASUREMENTS)){
+            else if(content.startsWith(COMMANDS.GETMEASUREMENTS.value)){
                 result.message = await dataService.getMeasurements();
             }
-            else if(content.startsWith(COMMANDS.ADDMEASUREMENTPOINT)){
-                result.message = await dataService.addMeasurementPoint(content.substring(COMMANDS.ADDMEASUREMENTPOINT.length).trim().split(' '));
+            else if(content.startsWith(COMMANDS.ADDMEASUREMENTPOINT.value)){
+                result.message = await dataService.addMeasurementPoint(getCommands(content, COMMANDS.ADDMEASUREMENTPOINT.value));
             }
-            else if(content.startsWith('show')){
-                //TO-DO: fetch data
-                // dataService.getWeatherData();
-                const imageBuffer = await imageService.generateChart();
-                result.attachment = new MessageAttachment(imageBuffer, 'chart.png');
-                result.message = 'Displaying chart:';
+            else if(content.startsWith(COMMANDS.LIST.value)){
+                result.message = '';
+                for(const key in COMMANDS){
+                    result.message += `\n${Settings.prefix}${COMMANDS[key].value} ${COMMANDS[key].params.length !== 0 ? `*${COMMANDS[key].params.join('* *')}*` :''}`;
+                }
+            }
+            else if(content.startsWith(COMMANDS.SHOWDATA.value)){
+                const {data, message, key} = await dataService.getWeatherData(getCommands(content, COMMANDS.SHOWDATA.value));
+                result.message = message;
+                
+                if(data){
+                    const imageBuffer = await imageService.generateChart(data, key);
+                    result.attachment = new MessageAttachment(imageBuffer, 'chart.png');
+                }
             }
             else{
                 result.message = 'Unknown command';
@@ -35,4 +42,8 @@ export default {
         }
         return result;
     }
+}
+
+function getCommands(content, command){
+    return content.substring(command.length).trim().split(' ');
 }

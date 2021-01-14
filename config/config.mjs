@@ -3,8 +3,24 @@ export const Settings = {
 }
 
 export const COMMANDS = {
-    SENDWEATHERDATA: 'send',
-    GETMEASUREMENTS: 'measurements',
-    ADDMEASUREMENTPOINT: 'addMeasurement',
-    SHOWDATA: 'show'
+    ADDMEASUREMENTPOINT: {
+        value: 'addMeasurement',
+        params: ['name', 'location']
+    },
+    GETMEASUREMENTS:{
+        value: 'measurements',
+        params: []
+    },
+    LIST:{
+        value: 'list',
+        params: []
+    },
+    SENDWEATHERDATA:{
+        value: 'send',
+        params: ['key', 'temperature', 'skyState']
+    },
+    SHOWDATA:{
+        value: 'show',
+        params: ['key', '?from', '?to']
+    }
 }

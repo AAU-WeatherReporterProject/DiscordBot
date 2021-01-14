@@ -13,7 +13,28 @@ client.on('message', async(message) => {
         message.channel.send(response.message, response.attachment);
     }
     else if(response.message){
-        message.reply(response.message);
+        const characterLimit = 2000 - (message.author.id.length + 3);
+        let replied = false;
+        while(response.message.length >= characterLimit){
+            for(let i = characterLimit-1; i >= 0; --i){
+                if(response.message[i] === '\n'){
+                    sendMessage(response.message.substring(0,i))
+                    response.message = response.message.substring(i+1);
+                    break;
+                }
+            }
+        }
+        sendMessage(response.message);
+
+        function sendMessage(content){
+            if(replied){
+                message.channel.send(content)
+            }
+            else{
+                replied = true;
+                message.reply(content);
+            }
+        }
     }
 })
 

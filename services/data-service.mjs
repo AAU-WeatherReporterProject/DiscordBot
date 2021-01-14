@@ -53,5 +53,41 @@ export default {
             console.error(e);
         }
         return message;
+    },
+
+    async getWeatherData([key, from, to]){
+        const result = {
+            message: ''
+        };
+        from = from?.replace('_', ' ');
+        to = to?.replace('_', ' ');
+        const dateRegex = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$/;
+        if(!key){
+            result.message = 'Please enter a valid key';
+        }
+        else if(from && !from.match(dateRegex)){
+            result.message = 'Please enter a valid "from" date';
+        }
+        else if(to && !to.match(dateRegex)){
+            result.message = 'Please enter a valid "to" date';
+        }
+        else{
+            try{
+                const { data } = await apiService.getWeatherData(key, from, to);
+                if(data?.length > 0){
+                    result.data = data;
+                    result.key = key;
+                    result.message = 'Displaying chart:';
+                }
+                else{
+                    result.message = 'No data';
+                }
+            }
+            catch(e){
+                result.message = 'Error while fetching weather data';
+                console.error(e);
+            }
+        }
+        return result;
     }
 }
