@@ -1,11 +1,19 @@
 export const Settings = {
     prefix: "."
-}
+};
+
+export const SKYSTATES = [
+    'Sunny',
+    'Windy',
+    'Cloudy',
+    'Rain',
+    'Clear'
+];
 
 export const COMMANDS = {
     ADDMEASUREMENTPOINT: {
         value: 'addMeasurement',
-        params: ['name', 'location']
+        params: ['location']
     },
     GETMEASUREMENTS:{
         value: 'measurements',
@@ -17,10 +25,10 @@ export const COMMANDS = {
     },
     SENDWEATHERDATA:{
         value: 'send',
-        params: ['key', 'temperature', 'skyState']
+        params: ['location', 'temperature', 'skyState:[0: Sunny, 1: Windy, 2: Cloudy, 3: Rain, 4: Clear]']
     },
     SHOWDATA:{
         value: 'show',
-        params: ['key', '?from', '?to']
+        params: ['location', '?from', '?to']
     }
-}
+};

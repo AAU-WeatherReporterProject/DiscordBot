@@ -1,7 +1,7 @@
 import apiService from './api-service.mjs';
 
 export default {
-    async sendWeatherData([key, temperature, skyState]){
+    async sendWeatherData(key, temperature, skyState){
         let message = '';
         temperature = +temperature;//.replace(',', '.');
         skyState = +skyState;
@@ -17,7 +17,7 @@ export default {
                     metadata: {key},
                     measurements: [{temperature, skyState}]
                 });
-                message = 'Data send';
+                message = 'Data sent';
             }
             catch(e){
                 message = 'Error while sending data';
@@ -32,7 +32,7 @@ export default {
         try{
             const response = await apiService.getMeasurements();
             for(let measurement of response.data){
-                message += `\n**name:** ${measurement.name}; **location:** ${measurement.location}; **key:** ${measurement.measurementKey}`;
+                message += `\n**location:** ${measurement.location}`;
             }
         }
         catch(e){
@@ -42,10 +42,10 @@ export default {
         return message;
     },
     
-    async addMeasurementPoint([name, location]){
+    async addMeasurementPoint(location){
         let message;
         try{
-            await apiService.addMeasurementPoint({name, location});
+            await apiService.addMeasurementPoint({location});
             message = 'Measurement sent';
         }
         catch(e){
@@ -55,7 +55,7 @@ export default {
         return message;
     },
 
-    async getWeatherData([key, from, to]){
+    async getWeatherData(key, from, to){
         const result = {
             message: ''
         };

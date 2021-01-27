@@ -13,13 +13,13 @@ export default {
         {
             const content = message.substring(Settings.prefix.length).trim();
             if(content.startsWith(COMMANDS.SENDWEATHERDATA.value)){
-                result.message = await dataService.sendWeatherData(getCommands(content, COMMANDS.SENDWEATHERDATA.value));
+                result.message = await dataService.sendWeatherData(...getCommands(content, COMMANDS.SENDWEATHERDATA.value));
             }
             else if(content.startsWith(COMMANDS.GETMEASUREMENTS.value)){
                 result.message = await dataService.getMeasurements();
             }
             else if(content.startsWith(COMMANDS.ADDMEASUREMENTPOINT.value)){
-                result.message = await dataService.addMeasurementPoint(getCommands(content, COMMANDS.ADDMEASUREMENTPOINT.value));
+                result.message = await dataService.addMeasurementPoint(...getCommands(content, COMMANDS.ADDMEASUREMENTPOINT.value));
             }
             else if(content.startsWith(COMMANDS.LIST.value)){
                 result.message = '';
@@ -28,12 +28,13 @@ export default {
                 }
             }
             else if(content.startsWith(COMMANDS.SHOWDATA.value)){
-                const {data, message, key} = await dataService.getWeatherData(getCommands(content, COMMANDS.SHOWDATA.value));
+                const {data, message, key} = await dataService.getWeatherData(...getCommands(content, COMMANDS.SHOWDATA.value));
                 result.message = message;
                 
                 if(data){
-                    const imageBuffer = await imageService.generateChart(data, key);
-                    result.attachment = new MessageAttachment(imageBuffer, 'chart.png');
+                    const imageData = await imageService.generateChart(data);
+                    result.attachment = new MessageAttachment(imageData.image, 'chart.png');
+                    result.message = imageData.message;
                 }
             }
             else{

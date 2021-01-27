@@ -1,17 +1,40 @@
 import { CanvasRenderService } from 'chartjs-node-canvas';
- 
+import { SKYSTATES } from '../config/config.mjs';
+const colors = [
+    {
+        value: [246, 210, 90],
+        text: 'yellow'
+    },
+    {
+        value: [188,107,80],
+        text: 'brown'
+    },
+    {
+        value: [255,255,255],
+        text: 'white'
+    },
+    {
+        value: [171,136,215],
+        text: 'purple'
+    },
+    {
+        value: [102,167,238],
+        text: 'blue'
+    }
+];
+const chartLegend = generateChartLegend();
 
 export default {
-    async generateChart(data, key){
+    async generateChart(data){
         const width = 1920; //px
         const height = 1080; //px
-        const canvasRenderService = new CanvasRenderService(width, height, (ChartJS) => { });
-        
+        const canvasRenderService = new CanvasRenderService(width, height, (ChartJS) => {
+         });
         // See https://www.chartjs.org/docs/latest/configuration
 
         const configuration = {
             type: 'bar',
-            data: this.prepareData(data, key),
+            data: this.prepareData(data),
             options: {
                 legend: {
                     display: false
@@ -47,41 +70,37 @@ export default {
             }
         };
         const image = await canvasRenderService.renderToBuffer(configuration);
-        return image;
+        
+        return {image, message: chartLegend};
     },
 
-    prepareData(data, key){
-        return {
+    prepareData(data){
+        const chartData = {
             labels: data.map(point => point.timestamp),
-            datasets: [{
-                label: `Point: ${key}`,
-                data: data.map(point => point.temperature),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(100, 100, 100, 0.2)',
-                    'rgba(200, 200, 200, 0.2)',
-                    'rgba(255, 0, 255, 0.2)',
-                    'rgba(128, 128, 0, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(100, 100, 100, 1)',
-                    'rgba(200, 200, 200, 1)',
-                    'rgba(255, 0, 255, 1)',
-                    'rgba(128, 128, 0, 1)'
-                ],
-                borderWidth: 1
-            }]
+            datasets: [
+                {
+                    data: data.map(point => point.temperature),
+                    backgroundColor: data.map(point =>{
+                        const c = colors[point.skyState].value;
+                        return `rgba(${c[0]}, ${c[1]},${c[2]},0.2)`;
+                    }),
+                    borderColor: data.map(point =>{
+                        const c = colors[point.skyState].value;
+                        return `rgba(${c[0]}, ${c[1]},${c[2]},1)`;
+                    }),
+                    borderWidth: 1
+                }
+            ]
         };
+
+        return chartData;
     }
+}
+
+function generateChartLegend(){
+    let legend = '**Legend:**';
+    for(let i = 0; i < SKYSTATES.length; ++i){
+        legend += `\n${SKYSTATES[i]}: :${colors[i].text}_circle:`
+    }
+    return legend;
 }

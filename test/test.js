@@ -12,10 +12,11 @@ describe('MessageService', async ()=>{
     describe('addMeasurementPoint', async ()=>{
         it('Adding measurement points', async ()=>{
             for await (const object of MeasurementObjects){
-                const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.ADDMEASUREMENTPOINT.value} ${object.name} ${object.location}`);
-                // const message = await dataService.addMeasurementPoint([object.name, object.location]);
+                const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.ADDMEASUREMENTPOINT.value} ${object.location}`);
                 expect(response.message).to.equal('Measurement sent');
             }
+            const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.ADDMEASUREMENTPOINT.value} ${object.location}`);
+            expect(response.message).to.equal('Error while sending measurementPoint');
         })
     });
     
@@ -29,8 +30,7 @@ describe('MessageService', async ()=>{
         it('right values', async ()=>{
             for await (const object of AddWeatherData){
                 const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.SENDWEATHERDATA.value} ${object.key} ${object.temperature} ${object.skyState}`);
-                // const message = await dataService.sendWeatherData([object.key, object.temperature, object.skyState]);
-                expect(response.message).to.equal('Data send');
+                expect(response.message).to.equal('Data sent');
             }
         })
     });
@@ -38,7 +38,7 @@ describe('MessageService', async ()=>{
     describe('getMeasurements', async ()=>{
         it('get points', async ()=>{
             const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.GETMEASUREMENTS.value}`);
-            expect(response.message).to.contain(`**name:** TestLocation; **location:** irgendwo; **key:** 123456789`)
+            expect(response.message).to.contain(`**location:** TestLocation`)
         })
     });
 
@@ -53,18 +53,19 @@ describe('MessageService', async ()=>{
             expect(response.attachment).to.be.undefined;
         });
         it('show: invalid from date', async ()=>{
-            const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.SHOWDATA.value} 123456789 abcd`);
+            const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.SHOWDATA.value} TestLocation abcd`);
             expect(response.message).to.equal('Please enter a valid "from" date');
             expect(response.attachment).to.be.undefined;
         });
         it('show: invalid to date', async ()=>{
-            const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.SHOWDATA.value} 123456789 2020-01-01_09:00:00 abcd`);
+            const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.SHOWDATA.value} TestLocation 2020-01-01_09:00:00 abcd`);
             expect(response.message).to.equal('Please enter a valid "to" date');
             expect(response.attachment).to.be.undefined;
         });
         it('show: right', async ()=>{
-            const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.SHOWDATA.value} 123456789`);
+            const response = await MessageService.handleMessage(`${Settings.prefix}${COMMANDS.SHOWDATA.value} TestLocation`);
             expect(response.attachment).to.not.be.undefined;
+            expect(response.message).to.not.be.undefined;
         })
     })
 })
