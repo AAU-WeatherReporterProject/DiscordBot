@@ -73,7 +73,7 @@ export default {
                             ticks: {
                                 fontSize: 30,
                                 suggestedMin: Types[type].min,
-                                suggestedMax: Types[type].max type === 0 || type === 1 ? 100 : 1100
+                                suggestedMax: Types[type].max
                             }
                         }
                     ],
