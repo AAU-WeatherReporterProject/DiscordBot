@@ -26,15 +26,21 @@ const chartLegend = generateChartLegend();
 const Types = [
     //temp
     {
-        label: 'Temperature (in C°)'
+        label: 'Temperature (in C°)',
+        min: -60,
+        max: 100
     },
     //hum
     {
-        label: 'Percent (%)'
+        label: 'Percent (%)',
+        min: 0,
+        max: 100
     },
     //pres
     {
-        label: 'Hektopascal (hPa)'
+        label: 'Hektopascal (hPa)',
+        min: 800,
+        max: 1100
     }
 
 ]
@@ -66,8 +72,8 @@ export default {
                             },
                             ticks: {
                                 fontSize: 30,
-                                suggestedMin: type === 0 ? -60 : type === 1 ? 0 : 800,
-                                suggestedMax: type === 0 || type === 1 ? 100 : 1100
+                                suggestedMin: Types[type].min,
+                                suggestedMax: Types[type].max type === 0 || type === 1 ? 100 : 1100
                             }
                         }
                     ],
