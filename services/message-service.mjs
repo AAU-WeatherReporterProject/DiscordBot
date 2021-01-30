@@ -28,11 +28,11 @@ export default {
                 }
             }
             else if(content.startsWith(COMMANDS.SHOWDATA.value)){
-                const {data, message, key} = await dataService.getWeatherData(...getCommands(content, COMMANDS.SHOWDATA.value));
+                const {data, message, type} = await dataService.getWeatherData(...getCommands(content, COMMANDS.SHOWDATA.value));
                 result.message = message;
                 
                 if(data){
-                    const imageData = await imageService.generateChart(data);
+                    const imageData = await imageService.generateChart(data, type);
                     result.attachment = new MessageAttachment(imageData.image, 'chart.png');
                     result.message = imageData.message;
                 }

@@ -23,9 +23,25 @@ const colors = [
     }
 ];
 const chartLegend = generateChartLegend();
+const Types = [
+    //temp
+    {
+        label: 'Temperature (in C°)'
+    },
+    //hum
+    {
+        label: 'Percent (%)'
+    },
+    //pres
+    {
+        label: 'Hektopascal (hPa)'
+    }
+
+]
 
 export default {
-    async generateChart(data){
+    async generateChart(data, type){
+        type = +type;
         const width = 1920; //px
         const height = 1080; //px
         const canvasRenderService = new CanvasRenderService(width, height, (ChartJS) => {
@@ -34,7 +50,7 @@ export default {
 
         const configuration = {
             type: 'bar',
-            data: this.prepareData(data),
+            data: this.prepareData(data, type),
             options: {
                 legend: {
                     display: false
@@ -44,12 +60,14 @@ export default {
                         {
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Temperature (in C°)',
+                                labelString: Types[type].label,
                                 fontSize: 30,
                                 fontWeight: 'bold'
                             },
                             ticks: {
-                                fontSize: 30
+                                fontSize: 30,
+                                suggestedMin: type === 0 ? -60 : type === 1 ? 0 : 800,
+                                suggestedMax: type === 0 || type === 1 ? 100 : 1100
                             }
                         }
                     ],
@@ -70,24 +88,45 @@ export default {
             }
         };
         const image = await canvasRenderService.renderToBuffer(configuration);
-        
-        return {image, message: chartLegend};
+        const message = type === 0 ? chartLegend : '';
+        return {image, message};
     },
 
-    prepareData(data){
+    prepareData(data, type){
+        let backgroundColor, borderColor, fillColor, strokeColor, key;
+        switch(type){
+            case 0:
+                backgroundColor = data.map(point =>{
+                    const c = colors[point.skyState].value;
+                    return `rgba(${c[0]}, ${c[1]},${c[2]},0.2)`;
+                });
+                borderColor = data.map(point =>{
+                    const c = colors[point.skyState].value;
+                    return `rgba(${c[0]}, ${c[1]},${c[2]},1)`;
+                });
+                key = 'temperature';
+                break;
+            
+            case 1:
+                key = 'humidity';
+                backgroundColor = data.map(()=>'rgba(220,220,220,0.5)');
+                borderColor = data.map(()=>'rgba(220,220,220,1)');
+                break;
+            case 2:
+                key = 'pressure';
+                backgroundColor = data.map(()=>'rgba(220,220,220,0.5)');
+                borderColor = data.map(()=>'rgba(220,220,220,1)');
+                break;
+        }
         const chartData = {
             labels: data.map(point => point.timestamp),
             datasets: [
                 {
-                    data: data.map(point => point.temperature),
-                    backgroundColor: data.map(point =>{
-                        const c = colors[point.skyState].value;
-                        return `rgba(${c[0]}, ${c[1]},${c[2]},0.2)`;
-                    }),
-                    borderColor: data.map(point =>{
-                        const c = colors[point.skyState].value;
-                        return `rgba(${c[0]}, ${c[1]},${c[2]},1)`;
-                    }),
+                    data: data.map(point => point[key]),
+                    backgroundColor,
+                    borderColor,
+                    fillColor,
+                    strokeColor,
                     borderWidth: 1
                 }
             ]

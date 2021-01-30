@@ -25,10 +25,10 @@ export const COMMANDS = {
     },
     SENDWEATHERDATA:{
         value: 'send',
-        params: ['location', 'temperature', 'skyState:[0: Sunny, 1: Windy, 2: Cloudy, 3: Rain, 4: Clear]']
+        params: ['location', 'temperature', 'skyState:[0: Sunny, 1: Windy, 2: Cloudy, 3: Rain, 4: Clear]', 'humidity (optional) [0-100]', 'pressure (optional) [800-1100]']
     },
     SHOWDATA:{
         value: 'show',
-        params: ['location', '?from', '?to']
-    }
+        params: ['type:[0: temperature, 1: humidity, 2: pressure]','location', '?from', '?to']
+    },
 };
