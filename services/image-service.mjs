@@ -28,19 +28,22 @@ const Types = [
     {
         label: 'Temperature (in C°)',
         min: -60,
-        max: 100
+        max: 100,
+        type: 'bar'
     },
     //hum
     {
         label: 'Percent (%)',
         min: 0,
-        max: 100
+        max: 100,
+        type: 'line'
     },
     //pres
     {
         label: 'Hektopascal (hPa)',
         min: 800,
-        max: 1100
+        max: 1100,
+        type: 'line'
     }
 
 ]
@@ -55,7 +58,7 @@ export default {
         // See https://www.chartjs.org/docs/latest/configuration
 
         const configuration = {
-            type: 'bar',
+            type: Types[type].type,
             data: this.prepareData(data, type),
             options: {
                 legend: {
