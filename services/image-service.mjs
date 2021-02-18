@@ -50,6 +50,7 @@ const Types = [
 
 export default {
     async generateChart(data, type){
+        data = data.reverse();
         type = +type;
         const width = 1920; //px
         const height = 1080; //px

@@ -46,5 +46,5 @@ export default {
 }
 
 function getCommands(content, command){
-    return content.substring(command.length).trim().split(' ');
+    return content.substring(command.length).trim().split(' ').filter(command => !!command);
 }
